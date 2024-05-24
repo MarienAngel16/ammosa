@@ -105,7 +105,35 @@ $result = $stmt->get_result();
   }
 
 
+ /* AGREGAR DETALLE A LAS RUTAS */
+ // Verificar si se han enviado los datos del formulario
+if (isset($_POST["clave_usuario"])) {
+    // Obtener los datos del formulario
+    $clave_usuario = $_POST['clave_usuario'];
+    $unidad = $_POST['unidad'];
+    $ruta = $_POST['ruta'];
 
+    // Preparar la sentencia SQL para insertar el registro en detalle_rutas
+    $sql = "INSERT INTO detalle_rutas (clave_ruta, clave_us, clave_camion) VALUES (?, ?, ?)";
+
+    // Preparar la declaración
+    if ($stmt = $conexion->prepare($sql)) {
+        // Vincular los parámetros
+        $stmt->bind_param("iii", $ruta, $clave_usuario, $unidad);
+
+        // Ejecutar la declaración
+        if ($stmt->execute()) {
+            echo '<script>alert("Registro guardado exitosamente."); window.location.href = "cuenta.html";</script>';
+        } else {
+            echo '<script>alert("Error al guardar el registro: ' . $stmt->error . '"); window.history.back();</script>';
+        }
+
+        // Cerrar la declaración
+        $stmt->close();
+    } else {
+        echo '<script>alert("Error en la preparación de la declaración: ' . $conexion->error . '"); window.history.back();</script>';
+    }
+}
 
 
 

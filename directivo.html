@@ -144,7 +144,42 @@
                       </h2>
                       <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
-                          <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                          
+                            <?php 
+                            /* ADQUIRIR INFORMACIÓN DE TODAS LAS UNIDADES */
+
+                            $sql = "SELECT num_camion, nombre_camion, especificaciones, fecha_ad FROM Camiones";
+                            $result = $conexion->query($sql);
+              
+                             // Verifica si hay resultados
+                             if ($result->num_rows > 0) {
+                             $unidades = $result->fetch_all(MYSQLI_ASSOC);
+                             } else {
+                               $unidades = [];
+                             }
+                            ?>                
+                            
+                            <ul class="list-group">
+                                <?php if (!empty($unidades)) { ?>
+                                    <?php foreach ($unidades as $unidad) { ?>
+                                        <li class="list-group-item d-flex align-items-center">
+                                            <div>
+                                                <h6>Unidad Asignada <?php echo htmlspecialchars($unidad["num_camion"]); ?></h6>
+                                                <h6>Descripción de la Unidad</h6>
+                                                <p><?php echo htmlspecialchars($unidad["especificaciones"]); ?></p>
+                                                <br>
+                                                <h6>Fecha de Adquisición de la Unidad: <?php echo htmlspecialchars($unidad["fecha_ad"]); ?></h6>
+                                            </div>
+                                            <img src="assets/img/<?php echo htmlspecialchars($unidad['num_camion']); ?>.png" alt="Imagen de la Unidad" class="img-fluid" style="max-width: 100px; height: auto;">
+                                        </li>
+                                    <?php } ?>
+                                <?php } else { ?>
+                                    <li class="list-group-item">No hay unidades disponibles.</li>
+                                <?php } ?>
+                            </ul>
+                            
+
+
                         </div>
                       </div>
                     </div>
@@ -156,10 +191,126 @@
                       </h2>
                       <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
-                          <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                          
+                            <?php 
+                            /* ADQUIRIR INFORMACIÓN DE LOS EMPLEADOS */
+
+                            $sql = "SELECT * FROM Usuario WHERE rol ='trabajador' ";
+                            $result = $conexion->query($sql);
+              
+                             // Verifica si hay resultados
+                             if ($result->num_rows > 0) {
+                             $trabajadores = $result->fetch_all(MYSQLI_ASSOC);
+                             } else {
+                               $trabajadores = [];
+                             }
+
+                             // Obtener información de los camiones
+                             $sql_camiones = "SELECT * FROM Camiones";
+                             $result_camiones = $conexion->query($sql_camiones);
+                             $camiones = $result_camiones->fetch_all(MYSQLI_ASSOC);
+                             
+                             // Obtener información de las rutas
+                             $sql_rutas = "SELECT * FROM rutas";
+                             $result_rutas = $conexion->query($sql_rutas);
+                             $rutas = $result_rutas->fetch_all(MYSQLI_ASSOC);                             
+                            ?>      
+                            
+                            <ul class="list-group">
+                                <?php if (!empty($trabajadores)) { ?>
+                                    <?php foreach ($trabajadores as $trabajador) { ?>
+                                        <li class="list-group-item d-flex align-items-center">
+                                            <form action="cuenta.php" method="post">
+                                                <div class="form-group">
+                                                    <label>Nombre del Chofer:</label>
+                                                    <input type="text" class="form-control" name="nombre_completo" value="<?php echo htmlspecialchars($trabajador["nombre_completo"]); ?>" readonly>
+
+                            <!-- Campo oculto para clave_usuario -->            
+                            <input type="hidden" name="clave_usuario" value="<?php echo htmlspecialchars($trabajador["clave_usuario"]); ?>">
+                                                    
+                            <!-- Campo oculto para password -->
+                            <input type="hidden" name="password" value="<?php echo htmlspecialchars($password); ?>">
+
+                            <!-- Campo oculto para nickname -->
+                            <input type="hidden" name="nickname" value="<?php echo htmlspecialchars($nombre); ?>">                                                    
+                                                   
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Unidad:</label>
+                                                    <select class="form-control" name="unidad">
+                                                        <?php foreach ($camiones as $camion) { ?>
+                                                            <option value="<?php echo $camion['num_camion']; ?>"><?php echo htmlspecialchars($camion['num_camion'] . ' - ' . $camion['nombre_camion']); ?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Ruta:</label>
+                                                    <select class="form-control" name="ruta">
+                                                        <?php foreach ($rutas as $ruta) { ?>
+                                                            <option value="<?php echo $ruta['clave_ruta']; ?>"><?php echo htmlspecialchars($ruta['clave_ruta'] . ' - ' . $ruta['nombre_ruta']); ?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                                <input type="hidden" name="clave_usuario" value="<?php echo htmlspecialchars($trabajador["clave_usuario"]); ?>">
+                                                <button type="submit" class="btn btn-primary mt-2">Asignar</button>
+                                            </form>
+<!--                                             <img src="assets/img/chofer.png" alt="Ícono de chofer" class="file-icon" style="max-width: 20px;">
+ -->                                        </li>
+                                    <?php } ?>
+                                <?php } else { ?>
+                                    <li class="list-group-item">No hay trabajadores disponibles.</li>
+                                <?php } ?>
+                            </ul>
+                                                  
+                            
+                         
+
                         </div>
                       </div>
                     </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingThree">
+                          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseThree">
+                            Directores
+                          </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                          
+                                <?php 
+                                /* ADQUIRIR INFORMACIÓN DE LOS DIRECTORES */
+    
+                                $sql = "SELECT * FROM Usuario WHERE rol ='directivo' ";
+                                $result = $conexion->query($sql);
+                  
+                                 // Verifica si hay resultados
+                                 if ($result->num_rows > 0) {
+                                 $directores = $result->fetch_all(MYSQLI_ASSOC);
+                                 } else {
+                                   $directores = [];
+                                 }
+                                ?>        
+                                                      
+                                
+                                <ul class="list-group">
+                                    <?php if (!empty($directores)) { ?>
+                                        <?php foreach ($directores as $director) { ?>
+                                            <li class="list-group-item d-flex align-items-center">
+                                                <div>
+                                                    <h6>Clave del Director : <?php echo htmlspecialchars($director["clave_usuario"]); ?></h6>       
+                                                    <h6>Nombre del Director : <?php echo htmlspecialchars($director["nombre_completo"]); ?></h6>                                                
+                                                </div>
+                                                <img src="assets/img/director.png" alt="Ícono de chofer" class="file-icon" style="max-width: 20px;">
+                                            </li>
+                                        <?php } ?>
+                                    <?php } else { ?>
+                                        <li class="list-group-item">No hay directivos disponibles.</li>
+                                    <?php } ?>
+                                </ul>                           
+    
+                            </div>
+                        </div>
+                      </div>
                   </div>
             </div>
         
