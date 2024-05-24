@@ -106,6 +106,9 @@ $result = $stmt->get_result();
 
 
 
+
+
+
   /* ACTUALIZAR USUARIO */
 // Verificar si se han enviado los datos del formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -158,7 +161,7 @@ if (isset($_FILES['archivo']) && isset($_POST['nombre']) && isset($_POST['tipo']
     if ($archivo['error'] === UPLOAD_ERR_OK) {
         // Obtener información del archivo
         $nombreArchivo = basename($archivo['name']);
-        $directorioDestino = 'uploads/';
+        $directorioDestino = 'archivos/';
         $rutaDestino = $directorioDestino . $nombreArchivo;
 
         // Mover el archivo al directorio de destino
@@ -184,16 +187,21 @@ if (isset($_FILES['archivo']) && isset($_POST['nombre']) && isset($_POST['tipo']
 } 
 
 
-  // Cerrar la sentencia
-  $stmt->close();
-
-  // Cerrar la conexión
-  $conexion->close();
-
 } else {
   echo "Por favor, ingrese su nickname y contraseña.";
 }
+
+
+
+/*   // Cerrar la sentencia
+  $stmt->close();
+
+  // Cerrar la conexión
+  $conexion->close(); */
+
 ?>
+
+
 
 
 

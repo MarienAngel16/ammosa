@@ -17,6 +17,7 @@
                     <p class="text-muted font-size-sm">Central AMMOSA</p>
                     <button class="btn btn-primary" data-toggle="modal" data-target="#miModal">Material</button>
                     <button class="btn btn-outline-primary" data-toggle="modal" data-target="#miModal2">Eventos</button>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#logoutModal">Cerrar Sesión</button>
                   </div>
                 </div>
               </div>
@@ -169,5 +170,129 @@
           </div>
         </div>
 
+      </div>
+  </div>
+
+
+
+  <!-- Modal 1 Materiales -->
+  <div class="modal fade" id="miModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Título del Modal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                
+              <!-- CONTENIDO -->
+              <?php 
+              /* ADQUIRIR ARCHIVOS DE TIPO MATERIAL */
+              // Consulta para obtener archivos de tipo "material"
+              $sql = "SELECT nombre, ruta_material FROM recurso WHERE tipo = 'material'";
+              $result = $conexion->query($sql);
+
+               // Verifica si hay resultados
+               if ($result->num_rows > 0) {
+               $materiales = $result->fetch_all(MYSQLI_ASSOC);
+               } else {
+                 $materiales = [];
+               }
+              ?>
+  
+              <h2>Archivos de Material</h2>
+              <ul class="list-group">
+            <?php if (!empty($materiales)) { ?>
+                <?php foreach ($materiales as $material) { ?>
+                    <li class="list-group-item d-flex align-items-center">
+                        <img src="assets/img/document.png" alt="Ícono de documento" class="file-icon" style="max-width: 20px;">
+                        <a href="<?php echo htmlspecialchars($material['ruta_material']); ?>" download><?php echo htmlspecialchars($material['nombre']); ?></a>
+                    </li>
+                <?php } ?>
+            <?php } else { ?>
+                <li class="list-group-item">No hay archivos de material disponibles.</li>
+            <?php } ?>
+             </ul>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>                
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+  <!-- Modal 2 Eventos -->
+  <div class="modal fade" id="miModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Título del Modal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                
+              <!-- CONTENIDO -->
+              <?php 
+              /* ADQUIRIR ARCHIVOS DE TIPO EVENTOS */
+              // Consulta para obtener archivos de tipo "eventos"
+              $sql = "SELECT nombre, ruta_material FROM recurso WHERE tipo = 'evento'";
+              $result = $conexion->query($sql);
+
+               // Verifica si hay resultados
+               if ($result->num_rows > 0) {
+               $materiales = $result->fetch_all(MYSQLI_ASSOC);
+               } else {
+                 $materiales = [];
+               }
+              ?>
+  
+              <h2>Archivos de Material</h2>
+              <ul class="list-group">
+            <?php if (!empty($materiales)) { ?>
+                <?php foreach ($materiales as $material) { ?>
+                    <li class="list-group-item d-flex align-items-center">
+                        <img src="assets/img/calendar.png" alt="Ícono de evento" class="file-icon" style="max-width: 20px;">
+                        <a href="<?php echo htmlspecialchars($material['ruta_material']); ?>" download><?php echo htmlspecialchars($material['nombre']); ?></a>
+                    </li>
+                <?php } ?>
+            <?php } else { ?>
+                <li class="list-group-item">No hay eventos cercanos disponibles. </li>
+            <?php } ?>
+             </ul>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+    <!-- Modal de confirmación de cierre de sesión -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="logoutModalLabel">Confirmar Cierre de Sesión</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  ¿Estás seguro de que deseas cerrar sesión?
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                  <a href="logout.php" class="btn btn-primary">Cerrar Sesión</a>
+              </div>
+          </div>
       </div>
   </div>
