@@ -326,7 +326,7 @@
                                         <li class="list-group-item d-flex align-items-center">
                                             <div>
                                                 <h6>Ruta <?php echo htmlspecialchars($ruta["nombre_ruta"]); ?></h6>       
-                                                <a href="directivo.html?clave_ruta=<?php echo urlencode($ruta['clave_ruta']); ?>" class="btn btn-primary" data-toggle="modal" data-target="#logoutModal3">Mostrar Comentarios</a>
+                                                <a href="directivo.php?clave_ruta=<?php echo urlencode($ruta['clave_ruta']); ?>" class="btn btn-primary" data-toggle="modal" data-target="#logoutModal3">Mostrar Comentarios</a>
                                             </div>
                                             <img src="assets/img/1.png" alt="Ícono de chofer" class="file-icon" style="max-width: 60px;">
                                         </li>
@@ -491,12 +491,12 @@
           <div id="comentariosRuta">
             <?php
 // Verificar si se ha recibido la clave de la ruta
-if(isset($_POST['clave_ruta'])) {
+
     // Incluir el archivo de conexión a la base de datos
     include_once 'database.php';
 
     // Sanitizar la entrada para evitar inyección SQL
-    $claveRuta = $_POST['clave_ruta'];
+    $claveRuta = '1';
 
     // Consulta SQL para obtener los comentarios asociados a la ruta especificada
     $sql = "SELECT * FROM comentarios WHERE id_ruta = ?";
@@ -527,13 +527,7 @@ if(isset($_POST['clave_ruta'])) {
         echo "<p>No hay comentarios para esta ruta.</p>";
     }
 
-    // Cerrar la conexión y la consulta
-    $stmt->close();
-    $conexion->close();
-} else {
-    // Si no se recibió la clave de la ruta
-    echo "Error: No se proporcionó la clave de la ruta.";
-}
+
 ?>
 
           </div>
